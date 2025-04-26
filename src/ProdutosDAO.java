@@ -17,7 +17,7 @@ import java.util.ArrayList;
 
 
 public class ProdutosDAO {
-    
+        
     Connection conn;
     PreparedStatement prep;
     ResultSet resultset;
@@ -46,7 +46,30 @@ public class ProdutosDAO {
     }
     
     public ArrayList<ProdutosDTO> listarProdutos(){
+        String sql = "select * from produtos";
         
+        conn = new conectaDAO().connectDB();
+
+        
+        try {
+            prep = conn.prepareStatement(sql);
+            resultset = prep.executeQuery();
+            
+            while(resultset.next()){              
+                
+                ProdutosDTO produto = new ProdutosDTO();
+                produto.setId(resultset.getInt("id"));
+                produto.setNome(resultset.getString("nome"));
+                produto.setValor(resultset.getInt("valor"));
+                produto.setStatus(resultset.getString("status"));
+                
+                
+                listagem.add(produto);
+                
+            }
+        } catch (SQLException erro) {
+            JOptionPane.showMessageDialog(null, "Falha na pesquisa de produtos. Mensagem de erro: " + erro);
+        }
         return listagem;
     }
     
